@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROTA 44 — Moda Streetwear</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #CC0000;
+    --red-hot: #FF1A1A;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --darker: #0D0D0D;
+    --white: #F5F5F5;
+    --gray: #888;
+    --border: rgba(204,0,0,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ========= GRAFFITI BG CANVAS ========= */
+  #graffiti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.045;
+  }
+
+  .page-wrap { position: relative; z-index: 1; }
+
+  /* ========= TOPBAR ========= */
+  .topbar {
+    background: var(--red);
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 8px;
+    text-transform: uppercase;
+  }
+
+  /* ========= NAV ========= */
+  nav {
+    background: rgba(10,10,10,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 24px;
+  }
+
+  .nav-inner {
+    max-width: 1300px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    gap: 24px;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-shield {
+    width: 48px;
+    height: 54px;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 26px;
+    color: var(--white);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .logo-text span { color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 32px;
+  }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color .2s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--red);
+    transition: width .25s;
+  }
+  .nav-links a:hover { color: var(--red); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .nav-icon {
+    background: none;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    font-size: 20px;
+    transition: color .2s;
+    position: relative;
+  }
+  .nav-icon:hover { color: var(--red); }
+  .badge {
+    position: absolute;
+    top: -6px; right: -8px;
+    background: var(--red);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ========= PAGE SECTIONS ========= */
+  section { display: none; }
+  section.active { display: block; }
+
+  /* ========= HERO ========= */
+  .hero {
+    min-height: 92vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, rgba(204,0,0,0.15) 0%, transparent 60%),
+      linear-gradient(to bottom, transparent 40%, rgba(10,10,10,0.95) 100%);
+    z-index: 1;
+  }
+
+  .hero-graffiti-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 70% 50%, rgba(204,0,0,0.08) 0%, transparent 70%);
+    z-index: 1;
+  }
+
+  /* SVG graffiti words scattered */
+  .hero-tag {
+    position: absolute;
+    font-family: 'Bebas Neue', cursive;
+    opacity: 0.06;
+    color: var(--red);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1300px;
+    margin: auto;
+    padding: 80px 24px;
+    width: 100%;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: -2px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .hero-title .red { color: var(--red); }
+
+  .hero-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 400;
+    letter-spacing: 3px;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    padding: 14px 36px;
+    cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: all .2s;
+  }
+  .btn-primary:hover { background: var(--red-hot); transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    padding: 14px 36px;
+    cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: all .2s;
+  }
+  .btn-outline:hover { border-color: var(--red); color: var(--red); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* Stripe bands */
+  .hero-stripe {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 38%;
+    z-index: 1;
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        rgba(204,0,0,0.04) 0px,
+        rgba(204,0,0,0.04) 2px,
+        transparent 2px,
+        transparent 14px
+      );
+  }
+
+  /* ========= MARQUEE ========= */
+  .marquee-wrap {
+    background: var(--red);
+    overflow: hidden;
+    padding: 10px 0;
+    position: relative;
+    z-index: 2;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-track span {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 16px;
+    letter-spacing: 4px;
+    padding: 0 32px;
+    color: #fff;
+    opacity: 0.9;
+  }
+  .marquee-track span::before {
+    content: '✦';
+    margin-right: 32px;
+    opacity: 0.6;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ========= SECTION HEADER ========= */
+  .section-wrap {
+    max-width: 1300px;
+    margin: auto;
+    padding: 80px 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(36px, 5vw, 56px);
+    letter-spacing: 2px;
+    line-height: 1;
+    color: var(--white);
+  }
+  .section-title .accent { color: var(--red); }
+
+  .section-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .section-link:hover { color: var(--red-hot); }
+
+  /* ========= CATEGORIES GRID ========= */
+  .cats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 12px;
+  }
+
+  .cat-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    aspect-ratio: 4/5;
+    transition: transform .3s;
+  }
+  .cat-card:first-child {
+    grid-row: span 2;
+    aspect-ratio: unset;
+  }
+  .cat-card:hover { transform: scale(1.01); }
+  .cat-card:hover .cat-overlay { opacity: 1; }
+  .cat-card:hover .cat-img { transform: scale(1.06); }
+
+  .cat-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .5s;
+    display: block;
+  }
+
+  /* placeholder bg for demo */
+  .cat-ph {
+    width: 100%;
+    height: 100%;
+    background: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 220px;
+  }
+  .cat-ph::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      rgba(255,255,255,0.015) 0px,
+      rgba(255,255,255,0.015) 1px,
+      transparent 1px,
+      transparent 16px
+    );
+  }
+  .cat-ph-label {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 72px;
+    color: rgba(255,255,255,0.04);
+    position: absolute;
+    letter-spacing: 4px;
+  }
+  .cat-ph-icon {
+    font-size: 48px;
+    opacity: 0.15;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cat-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(204,0,0,0.1) 100%);
+    opacity: 0.75;
+    transition: opacity .3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+  }
+
+  .cat-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .cat-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .cat-arrow {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: var(--red);
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: all .25s;
+  }
+  .cat-card:hover .cat-arrow { opacity: 1; transform: translateY(0); }
+
+  /* ========= PRODUCTS GRID ========= */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .prod-card {
+    background: var(--dark);
+    border: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: all .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .prod-card:hover {
+    border-color: var(--red);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(204,0,0,0.15);
+  }
+
+  .prod-img-wrap {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .prod-ph {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #161616;
+    font-size: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .prod-ph::after {
+    content: attr(data-label);
+    position: absolute;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 60px;
+    color: rgba(255,255,255,0.04);
+    letter-spacing: 3px;
+  }
+
+  .prod-badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: var(--red);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    z-index: 2;
+  }
+
+  .prod-wishlist {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .prod-card:hover .prod-wishlist { opacity: 1; }
+
+  .prod-info {
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .prod-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+
+  .prod-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .prod-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .prod-price {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    color: var(--white);
+    letter-spacing: 1px;
+  }
+  .prod-price-old {
+    font-size: 12px;
+    color: var(--gray);
+    text-decoration: line-through;
+    margin-left: 4px;
+    font-family: 'Barlow', sans-serif;
+  }
+  .prod-sizes {
+    display: flex;
+    gap: 4px;
+  }
+  .prod-size {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 2px 6px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ========= BANNER FULL ========= */
+  .banner-full {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    padding: 80px 24px;
+    text-align: center;
+  }
+  .banner-full::before {
+    content: '44';
+    position: absolute;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 500px;
+    color: rgba(204,0,0,0.03);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+    line-height: 1;
+    letter-spacing: -20px;
+  }
+  .banner-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: auto;
+  }
+  .banner-inner .section-title { margin-bottom: 16px; }
+  .banner-desc {
+    color: var(--gray);
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+    font-family: 'Barlow', sans-serif;
+  }
+
+  /* ========= PRODUCT PAGE ========= */
+  .product-page-wrap {
+    max-width: 1300px;
+    margin: auto;
+    padding: 60px 24px;
+  }
+
+  .breadcrumb {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 40px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .breadcrumb span { color: var(--red); }
+  .breadcrumb a { color: var(--gray); text-decoration: none; cursor: pointer; }
+  .breadcrumb a:hover { color: var(--white); }
+
+  .product-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .product-gallery {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+  }
+
+  .gallery-thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .thumb {
+    width: 80px;
+    height: 96px;
+    background: var(--dark);
+    border: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: border-color .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .thumb.active { border-color: var(--red); }
+  .thumb::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(-45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 12px);
+  }
+
+  .gallery-main-img {
+    background: var(--dark);
+    aspect-ratio: 3/4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 96px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .gallery-main-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 16px);
+  }
+  .gallery-main-img::after {
+    content: 'ROTA 44';
+    position: absolute;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 80px;
+    color: rgba(255,255,255,0.04);
+    letter-spacing: 6px;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .gallery-badge {
+    position: absolute;
+    top: 20px; left: 20px;
+    background: var(--red);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    z-index: 2;
+  }
+
+  .product-info {
+    padding-top: 8px;
+  }
+
+  .pi-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  .pi-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 48px;
+    letter-spacing: 1px;
+    line-height: 1.0;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .pi-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .stars { color: var(--red); font-size: 14px; letter-spacing: 2px; }
+  .pi-rating-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    color: var(--gray);
+  }
+
+  .pi-price-block {
+    background: rgba(204,0,0,0.07);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  }
+
+  .pi-price-old {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: var(--gray);
+    text-decoration: line-through;
+    margin-bottom: 4px;
+  }
+
+  .pi-price-main {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 48px;
+    color: var(--white);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  .pi-installments {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 4px;
+  }
+  .pi-installments strong { color: var(--white); }
+
+  .pi-section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 10px;
+  }
+
+  .size-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .size-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    background: none;
+    color: var(--white);
+    width: 48px; height: 48px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .size-btn:hover, .size-btn.active {
+    border-color: var(--red);
+    background: var(--red);
+    color: #fff;
+  }
+  .size-btn.unavail {
+    opacity: 0.25;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .color-grid {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .color-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .color-btn.active { border-color: var(--white); }
+
+  .add-to-cart-btn {
+    width: 100%;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    letter-spacing: 3px;
+    padding: 18px 0;
+    cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    transition: background .2s;
+    margin-bottom: 12px;
+  }
+  .add-to-cart-btn:hover { background: var(--red-hot); }
+
+  .wishlist-btn {
+    width: 100%;
+    background: transparent;
+    color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 0;
+    cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    transition: all .2s;
+    margin-bottom: 28px;
+  }
+  .wishlist-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .pi-details {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+
+  .pi-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+  }
+  .pi-detail-row dt { color: var(--gray); }
+  .pi-detail-row dd { color: var(--white); text-align: right; }
+
+  /* ========= CATEGORIES PAGE ========= */
+  .cats-page-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .cats-page-card {
+    background: var(--dark);
+    border: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: all .25s;
+  }
+  .cats-page-card:hover {
+    border-color: var(--red);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(204,0,0,0.12);
+  }
+
+  .cats-page-ph {
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #161616;
+    font-size: 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cats-page-ph::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(-45deg, rgba(255,255,255,0.015) 0, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 14px);
+  }
+  .cats-page-ph::after {
+    content: attr(data-bg);
+    position: absolute;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 72px;
+    color: rgba(255,255,255,0.04);
+    letter-spacing: 4px;
+  }
+  .cats-page-ph .emoji { position: relative; z-index: 1; }
+
+  .cats-page-info {
+    padding: 20px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .cats-page-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .cats-page-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 12px;
+  }
+  .cats-page-tag {
+    display: inline-block;
+    background: rgba(204,0,0,0.12);
+    border: 1px solid var(--border);
+    color: var(--red);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+
+  /* ========= FOOTER ========= */
+  footer {
+    background: var(--darker);
+    border-top: 1px solid var(--border);
+    padding: 60px 24px 30px;
+    margin-top: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  footer::before {
+    content: 'ROTA 44';
+    position: absolute;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 280px;
+    color: rgba(204,0,0,0.025);
+    bottom: -40px; right: -20px;
+    letter-spacing: -8px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .footer-inner {
+    max-width: 1300px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-brand .logo-shield { margin-bottom: 16px; }
+  .footer-brand p {
+    font-size: 14px;
+    color: var(--gray);
+    line-height: 1.7;
+    max-width: 280px;
+    margin-bottom: 24px;
+    font-family: 'Barlow', sans-serif;
+  }
+
+  .footer-socials {
+    display: flex;
+    gap: 10px;
+  }
+  .social-btn {
+    width: 38px; height: 38px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: none;
+    color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all .2s;
+    clip-path: polygon(0 0, 80% 0, 100% 20%, 100% 100%, 20% 100%, 0 80%);
+  }
+  .social-btn:hover { background: var(--red); border-color: var(--red); }
+
+  .footer-col h4 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li {
+    margin-bottom: 10px;
+  }
+  .footer-col a {
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color .2s;
+    cursor: pointer;
+  }
+  .footer-col a:hover { color: var(--red); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-copy {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .footer-pay {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .pay-icon {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 4px 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+
+  /* ========= MOBILE NAV ========= */
+  .nav-ham {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  /* ========= RESPONSIVE ========= */
+  @media (max-width: 1024px) {
+    .products-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .cats-page-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-ham { display: block; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .cats-grid { grid-template-columns: 1fr 1fr; }
+    .cats-grid .cat-card:first-child { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
+    .product-main { grid-template-columns: 1fr; gap: 32px; }
+    .product-gallery { grid-template-columns: 1fr; }
+    .gallery-thumbs { flex-direction: row; }
+    .thumb { width: 64px; height: 72px; }
+    .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+    .cats-page-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title { font-size: 64px; }
+    .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .section-wrap { padding: 48px 16px; }
+  }
+
+  /* ========= SCROLL FADE IN ========= */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<canvas id="graffiti-canvas"></canvas>
+
+<div class="page-wrap">
+  <!-- TOP BAR -->
+  <div class="topbar">🔥 FRETE GRÁTIS acima de R$299 &nbsp;·&nbsp; NOVIDADES TODA SEMANA &nbsp;·&nbsp; PARCELE EM ATÉ 12X SEM JUROS</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a class="nav-logo" onclick="showPage('home')">
+        <svg class="logo-shield" viewBox="0 0 100 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 4 L96 20 L96 72 Q96 95 50 108 Q4 95 4 72 L4 20 Z" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+          <path d="M50 8 L92 23 L92 71 Q92 92 50 104 Q8 92 8 71 L8 23 Z" fill="#0f0f0f"/>
+          <rect x="12" y="12" width="76" height="36" rx="4" fill="#1a1a1a"/>
+          <text x="50" y="40" font-family="Bebas Neue, cursive" font-size="22" fill="white" text-anchor="middle" letter-spacing="3">ROTA</text>
+          <path d="M12 48 L88 48 L88 96 Q88 104 50 108 Q12 104 12 96 Z" fill="#CC0000"/>
+          <text x="50" y="88" font-family="Bebas Neue, cursive" font-size="38" fill="white" text-anchor="middle" letter-spacing="-2">44</text>
+          <path d="M50 4 L96 20 L96 72 Q96 95 50 108 Q4 95 4 72 L4 20 Z" fill="none" stroke="#555" stroke-width="1.5"/>
+        </svg>
+        <div>
+          <div class="logo-text">ROTA <span>44</span></div>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a onclick="showPage('home')">Home</a></li>
+        <li><a onclick="showPage('categories')">Categorias</a></li>
+        <li><a onclick="showPage('product')">Produtos</a></li>
+        <li><a>Lançamentos</a></li>
+        <li><a>Sale 🔥</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="nav-icon">🔍</button>
+        <button class="nav-icon">👤</button>
+        <button class="nav-icon" style="position:relative">
+          🛒
+          <span class="badge">3</span>
+        </button>
+        <button class="nav-ham">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== HOME ==================== -->
+  <section id="home" class="active">
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-stripe"></div>
+      <div class="hero-tag" style="font-size:180px;top:-20px;right:5%;opacity:0.04;transform:rotate(-8deg)">STREET</div>
+      <div class="hero-tag" style="font-size:120px;bottom:60px;left:2%;opacity:0.03;transform:rotate(5deg)">ROTA</div>
+      <div class="hero-tag" style="font-size:90px;top:30%;right:20%;opacity:0.03;transform:rotate(-3deg)">FLOW</div>
+
+      <div class="hero-content">
+        <p class="hero-eyebrow">Shopping Center Brasil · Maringá — PR</p>
+        <h1 class="hero-title">
+          VESTE A<br>
+          <span class="red">ROTA</span><br>
+          44
+        </h1>
+        <p class="hero-sub">Streetwear da rua, do rap, do skate</p>
+        <div class="hero-ctas">
+          <button class="btn-primary" onclick="showPage('categories')">Ver Coleção</button>
+          <button class="btn-outline" onclick="showPage('product')">Lançamentos</button>
+        </div>
+      </div>
+
+      <div class="hero-scroll">
+        <span>scroll</span>
+        <span>▼</span>
+      </div>
+    </div>
+
+    <!-- MARQUEE -->
+    <div class="marquee-wrap">
+      <div class="marquee-track" id="marquee">
+        <span>STREETWEAR</span><span>ROTA 44</span><span>MARINGÁ</span><span>STREET CULTURE</span><span>SKATE</span><span>HIP-HOP</span><span>RAP NACIONAL</span><span>NOVA COLEÇÃO</span><span>STREETWEAR</span><span>ROTA 44</span><span>MARINGÁ</span><span>STREET CULTURE</span><span>SKATE</span><span>HIP-HOP</span><span>RAP NACIONAL</span><span>NOVA COLEÇÃO</span>
+      </div>
+    </div>
+
+    <!-- CATEGORIAS DESTAQUE -->
+    <div class="section-wrap fade-up">
+      <div class="section-header">
+        <h2 class="section-title">SHOP POR <span class="accent">CATEGORIA</span></h2>
+        <a class="section-link" onclick="showPage('categories')">Ver todas →</a>
+      </div>
+      <div class="cats-grid">
+        <!-- BIG LEFT -->
+        <div class="cat-card" onclick="showPage('categories')">
+          <div class="cat-ph" style="min-height:100%">
+            <div class="cat-ph-label">CAMISETAS</div>
+            <span class="cat-ph-icon">👕</span>
+          </div>
+          <div class="cat-overlay">
+            <div class="cat-name">CAMISETAS</div>
+            <div class="cat-count">48 produtos</div>
+          </div>
+          <div class="cat-arrow">→</div>
+        </div>
+        <!-- RIGHT TOP -->
+        <div class="cat-card" onclick="showPage('categories')">
+          <div class="cat-ph">
+            <div class="cat-ph-label">MOLETOM</div>
+            <span class="cat-ph-icon">🧥</span>
+          </div>
+          <div class="cat-overlay">
+            <div class="cat-name">MOLETONS</div>
+            <div class="cat-count">24 produtos</div>
+          </div>
+          <div class="cat-arrow">→</div>
+        </div>
+        <!-- RIGHT TOP 2 -->
+        <div class="cat-card" onclick="showPage('categories')">
+          <div class="cat-ph">
+            <div class="cat-ph-label">BONÉ</div>
+            <span class="cat-ph-icon">🧢</span>
+          </div>
+          <div class="cat-overlay">
+            <div class="cat-name">BONÉS & ACESSÓRIOS</div>
+            <div class="cat-count">32 produtos</div>
+          </div>
+          <div class="cat-arrow">→</div>
+        </div>
+        <!-- RIGHT BOTTOM -->
+        <div class="cat-card" onclick="showPage('categories')">
+          <div class="cat-ph">
+            <div class="cat-ph-label">CALÇA</div>
+            <span class="cat-ph-icon">👖</span>
+          </div>
+          <div class="cat-overlay">
+            <div class="cat-name">CALÇAS & SHORTS</div>
+            <div class="cat-count">19 produtos</div>
+          </div>
+          <div class="cat-arrow">→</div>
+        </div>
+        <!-- RIGHT BOTTOM 2 -->
+        <div class="cat-card" onclick="showPage('categories')">
+          <div class="cat-ph">
+            <div class="cat-ph-label">TÊNIS</div>
+            <span class="cat-ph-icon">👟</span>
+          </div>
+          <div class="cat-overlay">
+            <div class="cat-name">CALÇADOS</div>
+            <div class="cat-count">15 produtos</div>
+          </div>
+          <div class="cat-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LANÇAMENTOS -->
+    <div class="section-wrap fade-up" style="padding-top:0">
+      <div class="section-header">
+        <h2 class="section-title">LANÇA<span class="accent">MENTOS</span></h2>
+        <a class="section-link" onclick="showPage('categories')">Ver todos →</a>
+      </div>
+      <div class="products-grid">
+        <div class="prod-card fade-up" onclick="showPage('product')">
+          <div class="prod-img-wrap">
+            <div class="prod-ph" data-label="ROTA44">🖤</div>
+            <div class="prod-badge">NOVO</div>
+            <div class="prod-wishlist">♡</div>
+          </div>
+          <div class="prod-info">
+            <div class="prod-brand">Rota 44</div>
+            <div class="prod-name">Camiseta Oversized Graf Tag Preta</div>
+            <div class="prod-price-row">
+              <div><span class="prod-price">R$149</span><span class="prod-price-old">R$189</span></div>
+              <div class="prod-sizes"><span class="prod-size">P</span><span class="prod-size">M</span><span class="prod-size">G</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="prod-card fade-up" onclick="showPage('product')">
+          <div class="prod-img-wrap">
+            <div class="prod-ph" data-label="ROTA44">🔴</div>
+            <div class="prod-badge">HOT</div>
+            <div class="prod-wishlist">♡</div>
+          </div>
+          <div class="prod-info">
+            <div class="prod-brand">Rota 44</div>
+            <div class="prod-name">Moletom Hood Escudo Vermelho</div>
+            <div class="prod-price-row">
+              <div><span class="prod-price">R$249</span></div>
+              <div class="prod-sizes"><span class="prod-size">M</span><span class="prod-size">G</span><span class="prod-size">GG</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="prod-card fade-up" onclick="showPage('product')">
+          <div class="prod-img-wrap">
+            <div class="prod-ph" data-label="ROTA44">🧢</div>
+            <div class="prod-wishlist">♡</div>
+          </div>
+          <div class="prod-info">
+            <div class="prod-brand">Rota 44</div>
+            <div class="prod-name">Boné Snapback Aba Reta R44</div>
+            <div class="prod-price-row">
+              <div><span class="prod-price">R$89</span></div>
+              <div class="prod-sizes"><span class="prod-size">UN</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="prod-card fade-up" onclick="showPage('product')">
+          <div class="prod-img-wrap">
+            <div class="prod-ph" data-label="ROTA44">🖤</div>
+            <div class="prod-badge">SALE</div>
+            <div class="prod-wishlist">♡</div>
+          </div>
+          <div class="prod-info">
+            <div class="prod-brand">Rota 44</div>
+            <div class="prod-name">Calça Cargo Street Preta</div>
+            <div class="prod-price-row">
+              <div><span class="prod-price">R$199</span><span class="prod-price-old">R$259</span></div>
+              <div class="prod-sizes"><span class="prod-size">36</span><span class="prod-size">38</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANNER -->
+    <div class="banner-full">
+      <div class="banner-inner">
+        <h2 class="section-title">MODA <span class="accent">RUA</span><br>DESDE MARINGÁ</h2>
+        <p class="banner-desc">Shopping Center Brasil, loja 43/44 172/173. Do streetwear ao skate, do grafite ao rap — a ROTA 44 é o ponto de encontro da cena.</p>
+        <button class="btn-primary">VEJA O INSTAGRAM</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ==================== CATEGORIES ==================== -->
+  <section id="categories">
+    <div class="section-wrap">
+      <div class="section-header">
+        <h2 class="section-title">TODAS AS <span class="accent">CATEGORIAS</span></h2>
+      </div>
+      <div class="cats-page-grid">
+        <div class="cats-page-card fade-up" onclick="showPage('product')">
+          <div class="cats-page-ph" data-bg="CAMISETAS"><span class="emoji">👕</span></div>
+          <div class="cats-page-info">
+            <div class="cats-page-name">Camisetas</div>
+            <div class="cats-page-sub">48 produtos disponíveis</div>
+            <span class="cats-page-tag">Oversized</span>
+            <span class="cats-page-tag">Básica</span>
+            <span class="cats-page-tag">Estampada</span>
+          </div>
+        </div>
+        <div class="cats-page-card fade-up" onclick="showPage('product')">
+          <div class="cats-page-ph" data-bg="MOLETONS"><span class="emoji">🧥</span></div>
+          <div class="cats-page-info">
+            <div class="cats-page-name">Moletons</div>
+            <div class="cats-page-sub">24 produtos disponíveis</div>
+            <span class="cats-page-tag">Hood</span>
+            <span class="cats-page-tag">Crewneck</span>
+            <span class="cats-page-tag">Zip</span>
+          </div>
+        </div>
+        <div class="cats-page-card fade-up" onclick="showPage('product')">
+          <div class="cats-page-ph" data-bg="CALCAS"><span class="emoji">👖</span></div>
+          <div class="cats-page-info">
+            <div class="cats-page-name">Calças & Shorts</div>
+            <div class="cats-page-sub">19 produtos disponíveis</div>
+            <span class="cats-page-tag">Cargo</span>
+            <span class="cats-page-tag">Jogger</span>
+            <span class="cats-page-tag">Denim</span>
+          </div>
+        </div>
+        <div class="cats-page-card fade-up" onclick="showPage('product')">
+          <div class="cats-page-ph" data-bg="BONES"><span class="emoji">🧢</span></div>
+          <div class="cats-page-info">
+            <div class="cats-page-name">Bonés & Acessórios</div>
+            <div class="cats-page-sub">32 produtos disponíveis</div>
+            <span class="cats-page-tag">Snapback</span>
+            <span class="cats-page-tag">Trucker</span>
+            <span class="cats-page-tag">Bucket</span>
+          </div>
+        </div>
+        <div class="cats-page-card fade-up" onclick="showPage('product')">
+          <div class="cats-page-ph" data-bg="CALCADOS"><span class="emoji">👟</span></div>
+          <div class="cats-page-info">
+            <div class="cats-page-name">Calçados</div>
+            <div class="cats-page-sub">15 produtos disponíveis</div>
+            <span class="cats-page-tag">Tênis</span>
+            <span class="cats-page-tag">Skate</span>
+          </div>
+        </div>
+        <div class="cats-page-card fade-up" onclick="showPage('product')">
+          <div class="cats-page-ph" data-bg="COLABS"><span class="emoji">🤝</span></div>
+          <div class="cats-page-info">
+            <div class="cats-page-name">Collabs</div>
+            <div class="cats-page-sub">8 produtos disponíveis</div>
+            <span class="cats-page-tag">Edição Limitada</span>
+            <span class="cats-page-tag">Exclusivo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PRODUCT ==================== -->
+  <section id="product">
+    <div class="product-page-wrap">
+      <div class="breadcrumb">
+        <a onclick="showPage('home')">Home</a> /
+        <a onclick="showPage('categories')">Camisetas</a> /
+        <span>Camiseta Oversized Graf Tag Preta</span>
+      </div>
+
+      <div class="product-main">
+        <!-- GALLERY -->
+        <div class="product-gallery">
+          <div class="gallery-thumbs">
+            <div class="thumb active">🖤</div>
+            <div class="thumb">🔴</div>
+            <div class="thumb">👤</div>
+            <div class="thumb">📐</div>
+          </div>
+          <div class="gallery-main-img">
+            <div class="gallery-badge">NOVO</div>
+            <span style="font-size:96px;position:relative;z-index:1">🖤</span>
+          </div>
+        </div>
+
+        <!-- INFO -->
+        <div class="product-info">
+          <div class="pi-brand">Rota 44 — Moda Streetwear</div>
+          <h1 class="pi-name">Camiseta Oversized Graf Tag Preta</h1>
+
+          <div class="pi-rating">
+            <span class="stars">★★★★★</span>
+            <span class="pi-rating-count">4.9 (47 avaliações)</span>
+          </div>
+
+          <div class="pi-price-block">
+            <div class="pi-price-old">De R$189,00</div>
+            <div class="pi-price-main">R$149,90</div>
+            <div class="pi-installments">ou <strong>12x de R$14,99</strong> sem juros no cartão</div>
+          </div>
+
+          <div class="pi-section-label">Cor: Preto</div>
+          <div class="color-grid" style="margin-bottom:28px">
+            <div class="color-btn active" style="background:#111;border-color:#fff"></div>
+            <div class="color-btn" style="background:#CC0000"></div>
+            <div class="color-btn" style="background:#2a2a2a"></div>
+            <div class="color-btn" style="background:#1a3a1a"></div>
+          </div>
+
+          <div class="pi-section-label">Tamanho</div>
+          <div class="size-grid">
+            <button class="size-btn unavail">PP</button>
+            <button class="size-btn">P</button>
+            <button class="size-btn active">M</button>
+            <button class="size-btn">G</button>
+            <button class="size-btn">GG</button>
+            <button class="size-btn">XGG</button>
+          </div>
+
+          <button class="add-to-cart-btn">🛒 ADICIONAR AO CARRINHO</button>
+          <button class="wishlist-btn">♡ SALVAR NA LISTA DE DESEJOS</button>
+
+          <div class="pi-details">
+            <dl>
+              <div class="pi-detail-row">
+                <dt>Material</dt>
+                <dd>100% Algodão 30.1 Penteado</dd>
+              </div>
+              <div class="pi-detail-row">
+                <dt>Corte</dt>
+                <dd>Oversized</dd>
+              </div>
+              <div class="pi-detail-row">
+                <dt>Lavagem</dt>
+                <dd>Máquina, temperatura fria</dd>
+              </div>
+              <div class="pi-detail-row">
+                <dt>Estampa</dt>
+                <dd>Serigrafia Graffiti Tag</dd>
+              </div>
+              <div class="pi-detail-row">
+                <dt>Entrega estimada</dt>
+                <dd>3–7 dias úteis</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- RELATED -->
+      <div style="margin-top:80px">
+        <div class="section-header">
+          <h2 class="section-title">VOCÊ TAMBÉM <span class="accent">VAI CURTIR</span></h2>
+        </div>
+        <div class="products-grid">
+          <div class="prod-card" onclick="showPage('product')">
+            <div class="prod-img-wrap"><div class="prod-ph" data-label="ROTA44">🔴</div><div class="prod-badge">HOT</div></div>
+            <div class="prod-info">
+              <div class="prod-brand">Rota 44</div>
+              <div class="prod-name">Moletom Hood Escudo</div>
+              <div class="prod-price-row"><span class="prod-price">R$249</span></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showPage('product')">
+            <div class="prod-img-wrap"><div class="prod-ph" data-label="ROTA44">🧢</div></div>
+            <div class="prod-info">
+              <div class="prod-brand">Rota 44</div>
+              <div class="prod-name">Boné Snapback R44</div>
+              <div class="prod-price-row"><span class="prod-price">R$89</span></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showPage('product')">
+            <div class="prod-img-wrap"><div class="prod-ph" data-label="ROTA44">👖</div><div class="prod-badge">SALE</div></div>
+            <div class="prod-info">
+              <div class="prod-brand">Rota 44</div>
+              <div class="prod-name">Calça Cargo Street</div>
+              <div class="prod-price-row"><span class="prod-price">R$199</span><span class="prod-price-old">R$259</span></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showPage('product')">
+            <div class="prod-img-wrap"><div class="prod-ph" data-label="ROTA44">🖤</div><div class="prod-badge">NOVO</div></div>
+            <div class="prod-info">
+              <div class="prod-brand">Rota 44</div>
+              <div class="prod-name">Camiseta Box Logo</div>
+              <div class="prod-price-row"><span class="prod-price">R$139</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg class="logo-shield" viewBox="0 0 100 112" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:58px;display:block;margin-bottom:16px">
+          <path d="M50 4 L96 20 L96 72 Q96 95 50 108 Q4 95 4 72 L4 20 Z" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+          <path d="M50 8 L92 23 L92 71 Q92 92 50 104 Q8 92 8 71 L8 23 Z" fill="#0f0f0f"/>
+          <rect x="12" y="12" width="76" height="36" rx="4" fill="#1a1a1a"/>
+          <text x="50" y="40" font-family="Bebas Neue, cursive" font-size="22" fill="white" text-anchor="middle" letter-spacing="3">ROTA</text>
+          <path d="M12 48 L88 48 L88 96 Q88 104 50 108 Q12 104 12 96 Z" fill="#CC0000"/>
+          <text x="50" y="88" font-family="Bebas Neue, cursive" font-size="38" fill="white" text-anchor="middle" letter-spacing="-2">44</text>
+          <path d="M50 4 L96 20 L96 72 Q96 95 50 108 Q4 95 4 72 L4 20 Z" fill="none" stroke="#555" stroke-width="1.5"/>
+        </svg>
+        <p>Loja de roupas streetwear localizada no Shopping Center Brasil, Maringá–PR. Moda de rua, skate, hip-hop e identidade 100% nacional.</p>
+        <div class="footer-socials">
+          <button class="social-btn">📸</button>
+          <button class="social-btn">▶️</button>
+          <button class="social-btn">💬</button>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a onclick="showPage('home')">Home</a></li>
+          <li><a onclick="showPage('categories')">Categorias</a></li>
+          <li><a onclick="showPage('product')">Produtos</a></li>
+          <li><a>Lançamentos</a></li>
+          <li><a>Sale 🔥</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Ajuda</h4>
+        <ul>
+          <li><a>Trocas & Devoluções</a></li>
+          <li><a>Prazo de Entrega</a></li>
+          <li><a>Guia de Tamanhos</a></li>
+          <li><a>FAQ</a></li>
+          <li><a>Rastrear Pedido</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li><a>📍 Shopping CB, Loja 43/44</a></li>
+          <li><a>🕐 Seg–Sáb 9h–18h</a></li>
+          <li><a>📱 WhatsApp</a></li>
+          <li><a>✉️ contato@rota44.com.br</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom" style="max-width:1300px;margin:auto">
+      <div class="footer-copy">© 2025 ROTA 44 — Todos os direitos reservados</div>
+      <div class="footer-pay">
+        <span class="pay-icon">PIX</span>
+        <span class="pay-icon">VISA</span>
+        <span class="pay-icon">MASTER</span>
+        <span class="pay-icon">BOLETO</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ===== GRAFFITI CANVAS =====
+const canvas = document.getElementById('graffiti-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = document.body.scrollHeight;
+}
+
+function drawGraffiti() {
+  resizeCanvas();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const tags = ['ROTA', '44', 'STREET', 'FLOW', 'SKATE', 'GRAF', 'R44', 'MARINGÁ', 'RAP', 'RUA', 'ROTA44'];
+  const count = 60;
+
+  for (let i = 0; i < count; i++) {
+    const tag = tags[Math.floor(Math.random() * tags.length)];
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const size = 30 + Math.random() * 140;
+    const angle = (Math.random() - 0.5) * 0.6;
+    const alpha = 0.03 + Math.random() * 0.07;
+    const isRed = Math.random() > 0.5;
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.globalAlpha = alpha;
+    ctx.font = `${size}px 'Bebas Neue', cursive`;
+    ctx.fillStyle = isRed ? '#CC0000' : '#ffffff';
+    ctx.letterSpacing = '4px';
+    ctx.fillText(tag, 0, 0);
+    ctx.restore();
+  }
+
+  // Extra spray paint circles
+  for (let i = 0; i < 20; i++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const r = 40 + Math.random() * 120;
+    const grd = ctx.createRadialGradient(x, y, 0, x, y, r);
+    const isRed = Math.random() > 0.6;
+    grd.addColorStop(0, isRed ? 'rgba(204,0,0,0.06)' : 'rgba(255,255,255,0.04)');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// ===== PAGE ROUTING =====
+function showPage(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(observeFadeUps, 100);
+  setTimeout(drawGraffiti, 300);
+}
+
+// ===== FADE UP OBSERVER =====
+function observeFadeUps() {
+  const els = document.querySelectorAll('.fade-up:not(.visible)');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(el => obs.observe(el));
+}
+
+// ===== SIZE BTN =====
+document.querySelectorAll('.size-btn:not(.unavail)').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ===== COLOR BTN =====
+document.querySelectorAll('.color-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ===== THUMB GALLERY =====
+document.querySelectorAll('.thumb').forEach(t => {
+  t.addEventListener('click', function() {
+    document.querySelectorAll('.thumb').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ===== INIT =====
+window.addEventListener('resize', drawGraffiti);
+window.addEventListener('load', () => {
+  drawGraffiti();
+  observeFadeUps();
+});
+setTimeout(drawGraffiti, 500);
+</script>
+</body>
+</html>
